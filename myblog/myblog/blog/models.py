@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
+from django.shortcuts import render
 
 # Create your models here.
 class Category(models.Model):
@@ -9,8 +11,8 @@ class Category(models.Model):
         return self.name
 
 
-class Tags(models.Model):
-    nama = models.CharField(max_length=20)
+class Tag(models.Model):
+    name = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
@@ -26,5 +28,9 @@ class Post(models.Model):
     view = models.PositiveIntegerField(default=0)
 
     category = models.ForeignKey(Category)
-    tags=models.ManyToManyField(Tags)
+    tags=models.ManyToManyField(Tag)
     author = models.ForeignKey(User)
+
+    def get_absolute_url(self):
+        return reverse("blog:article", kwargs={'pk':self.pk})
+

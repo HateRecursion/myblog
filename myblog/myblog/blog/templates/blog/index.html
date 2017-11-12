@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static%}
+
+{% block subheader %}
+<a href="#">Blog</a>
+{% endblock subheader %}
+
+
+{% block content %}
+<div class="col-md-8 blog-main">
+    {% if latest_post_list %}
+        <div class="row">
+        {% for post in latest_post_list %}
+            <div class="col-md-6 col-sm-6">
+                <article class=" blog-teaser">
+                    <header>
+                        <img src="{% static 'blog/img/1.jpg' %}" alt="picture">
+                        <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+                        <span class="meta">{{ post.created_time }}, {{ post.author }}</span>
+                        <hr>
+                    </header>
+                    <div class="body">
+                        {{ post.excerpt }}
+                    </div>
+                    <div class="clearfix">
+                        <a href="{{ post.get_absolute_url }}" class="btn btn-clean-one">Read more</a>
+                    </div>
+                </article>
+            </div>
+        {% endfor %}
+        </div>
+        <div class="paging">
+            <ul class="pagination">
+                <li><a href="#">&laquo;</a></li>
+                <li class="active"><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li><a href="#">&raquo;</a></li>
+            </ul>
+        </div>
+    {% else %}
+        <P class="text-center">No Post yet!</P>
+    {% endif %}
+</div>
+{% endblock content %}
+
