@@ -22,17 +22,28 @@
         <div class="body">
             <h1>{{ post.title }}</h1>
             <div class="meta">
-                <i class="fa fa-user"></i> {{ post.author }} <i class="fa fa-comments"></i><span class="data"><a href="#comments">3 Comments</a></span>
+                <i class="fa fa-user"></i> {{ post.author }} 阅读{{ post.view }} <i class="fa fa-comments"></i><span class="data"><a href="#comments">3 Comments</a></span>
+                <br>
                 <i class="fa fa-calendar"></i>创建时间：{{ post.created_time }}<i class="fa fa-calendar"></i>修改时间：{{ post.modified_time }}
             </div>
             <p>{{ post.body|safe }}</p>
         </div>
         </article>
 
-        <aside class="social-icons clearfix">
-        <h3>Share on </h3>
-        <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-google"></i></a>
-        </aside>
+        <div class="row">
+            <div class="col-md-4">
+                {% for tag in post.tags.all %}
+                <p>{{ tag.name }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="col-md-4">
+            <aside class="social-icons clearfix">
+            <h3>Share on </h3>
+            <a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i class="fa fa-google"></i></a>
+            </aside>
+            </div>
+        </div>
 
         <aside class="comments" id="comments">
         <hr>

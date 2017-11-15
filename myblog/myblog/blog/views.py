@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.views.generic import ListView,DetailView
-from .models import Post
+from .models import Post,Category,Tag
 
 # Create your views here.
 class IndexView(ListView):
@@ -16,6 +16,7 @@ class IndexView(ListView):
         context['loop_counter']=range(1,5)
         return context
 
+
 class AchiveView(ListView):
     model = Post
     template_name = 'blog/index.html'
@@ -26,15 +27,40 @@ class AchiveView(ListView):
                                    created_time__month=self.kwargs.get('month'))
 
 
-
-class DetailView(DetailView):
+class ArticleView(DetailView):
     model = Post
     template_name = 'blog/single.html'
     context_object_name = 'post'
 
+    def get(self, request, *args, **kwargs):
+        response = super(ArticleView, self).get(request, *args, **kwargs)
+        self.object.increase_view()
+        return response
+
+
+class CategoryView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'latest_post_list'
+
+    def get_queryset(self):
+        cate = get_object_or_404(Category, pk=self.kwargs.get('pk'))
+        return Post.objects.filter(category=cate)
+
+
+class TagView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'latest_post_list'
+
+    def get_queryset(self):
+        tag = get_object_or_404(Tag, pk=self.kwargs.get('pk'))
+        return Post.objects.filter(tags=tag)
+
 
 def contact(request):
     return render(request, 'blog/contact.html')
+
 
 def about(request):
     return render(request, 'blog/about.html')

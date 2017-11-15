@@ -20,7 +20,6 @@ def get_post_date_monthly():
     post_data=[]
     for post in post_dates:
         num = Post.objects.filter(created_time__year=post.year, created_time__month=post.month).count()
-        print("year %d, month %d, num:%d" % (post.year, post.month, num))
         post_data.append((post.year,post.month,num))
     return post_data
 

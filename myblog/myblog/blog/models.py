@@ -34,3 +34,6 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse("blog:article", kwargs={'pk':self.pk})
 
+    def increase_view(self):
+        self.view+=1
+        self.save(update_fields=['view'])
