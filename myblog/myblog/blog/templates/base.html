@@ -83,71 +83,92 @@
                 {% block content %}
                 {% endblock content %}
                 <aside class="col-md-4 blog-aside">
-
-                    <div class="panel panel-info">
-                        <div class="panel-heading">最新文章</div>
-                        <div class="list-group">
-                            {% get_recent_post_list as rencent_post %}
-                            {% for post in rencent_post %}
-                            <a href="{{ post.get_absolute_url }}" class="list-group-item"><span class="badge">{{ post.view }}</span>{{ post.title }}</a>
-                            {% endfor %}
+                    <div class="panel-group">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#collapseOne">最新文章</a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                {% get_recent_post_list as rencent_post %}
+                                {% for post in rencent_post %}
+                                <a href="{{ post.get_absolute_url }}" class="list-group-item" style="font-size:16px">
+                                    <span class="badge">{{ post.created_time|date:"Y年n月j日" }}</span>{{ post.title }}
+                                </a>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </div>
+                        <br>
 
-                    <div class="aside-widget">
-                        <header>
-                            <h3>文章点击数</h3>
-                        </header>
-                        <div class="body">
-                            <ul class="list-group">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#collapseTwo">文章点击数</a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse in">
                                 {% get_most_viewd_posts as view_list %}
                                 {% for post in view_list %}
-                                <li class="list-group-item"><span class="badge">{{ post.view }}</span><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+                                <a href="{{ post.get_absolute_url }}" class="list-group-item" style="font-size:16px">
+                                    <span class="badge">{{ post.view }}</span>{{ post.title }}
+                                </a>
                                 {% endfor %}
-                            </ul>
+                            </div>
                         </div>
-                    </div>
+                        <br>
 
-                    <div class="aside-widget">
-                        <header>
-                            <h3>文章归档</h3>
-                        </header>
-                        <div class="body">
-                            <ul class="list-group">
+                        <div class=" panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#collapseThree">文章归档</a>
+                                </h4>
+                            </div>
+                            <div id="collapseThree" class="panel-collapse collapse in">
                                 {% get_post_date_monthly as date_monthly %}
                                 {% for date in date_monthly %}
-                                <li class="list-group-item"><span class="badge">{{ date.2 }}</span><a href="{% url 'blog:archives' date.0 date.1 %}">{{ date.0 }}年 {{ date.1 }}月</a></li>
+                                <a href="{% url 'blog:archives' date.0 date.1 %}" class="list-group-item">
+                                    <span class="badge">{{ date.2 }}</span>{{ date.0 }}年{{ date.1 }}月
+                                </a>
                                 {% endfor %}
-                            </ul>
+                            </div>
                         </div>
-                    </div>
+                        <br>
 
-                    <div class="aside-widget">
-                        <header>
-                            <h3>文章分类</h3>
-                        </header>
-                        <div class="body">
-                            <ul class="list-group">
+                        <div class=" panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#collapseFour">文章分类</a>
+                                </h4>
+                            </div>
+                            <div id="collapseFour" class="panel-collapse collapse in">
                                 {% get_categories as categories %}
                                 {% for category in categories %}
-                                <li class="list-group-item"><span class="badge">{{ category.post_num }}</span><a href="{% url 'blog:category' category.pk %}">{{ category.name }}</a></li>
+                                <a href="{% url 'blog:category' category.pk %}" class="list-group-item">
+                                    <span class="badge">{{ category.post_num }}</span>{{ category.name }}
+                                </a>
                                 {% endfor %}
-                            </ul>
+                            </div>
                         </div>
-                    </div>
+                        <br>
 
-                    <div class="">
-                        <header>
-                            <h3>文章标签</h3>
-                        </header>
-                        <div class=" ">
-                            <ul class="list-group">
+                        <div class=" panel panel-info">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#collapseFive">文章标签</a>
+                                </h4>
+                            </div>
+                            <div id="collapseFive" class="panel-collapse collapse in">
                                 {% get_tags as tags %}
                                 {% for tag in tags %}
-                                <li class="list-group-item"><span class="badge">{{ tag.post_num }}</span><a href="{% url 'blog:tag' tag.pk %}" class="label label-info" >{{ tag.name }}</a></li>
+                                <a href="{% url 'blog:tag' tag.pk %}" class="label label-info">{{ tag.name }}
+                                    <span class="badge">{{ tag.post_num }}</span>
+                                </a>
                                 {% endfor %}
-                            </ul>
+                            </div>
                         </div>
+                        <br>
+
                     </div>
                 </aside>
             </div>
