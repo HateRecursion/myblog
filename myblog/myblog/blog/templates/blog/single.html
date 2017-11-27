@@ -13,10 +13,8 @@
     <div class="col-md-8 blog-main">
         <article class="blog-post">
         <header>
-
             <div class="lead-image">
                 <img src="{% static 'blog/img/single-post.jpg' %}" alt="" class="img-responsive">
-
             </div>
         </header>
         <div class="body">
@@ -66,28 +64,28 @@
 
         <hr>
 
-        <h2><i class="fa fa-pencil"></i>提交评论</h2>
+        <h3><i class="fa fa-pencil"></i>提交评论</h3>
 
-        <form action="{% url 'comments:post_comment' post.pk %}" method="post" accept-charset="utf-8">
+        <form action="{% url 'comments:post_comment' post.pk %}" method="post" accept-charset="utf-8" role="form">
             {% csrf_token %}
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="{{form.name.id_for.label}}">名字:</label>
-                    {{ form.name }}
-                    {{ form.name.errors }}
+                <div class="row">
+                    <div class="col-md-4 form-group">
+                        <label for="{{form.name.id_for.label}}">名字:</label>
+                        {{ form.name }}
+                        {{ form.name.errors }}
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label for="{{form.email.id_for.label}}">邮箱:</label>
+                        {{ form.email }}
+                        {{ form.email.errors }}
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label for="{{form.text.id_for.label}}">评论:</label>
+                        {{ form.text }}
+                        {{ form.text.errors }}
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <label for="{{form.email.id_for.label}}">邮箱:</label>
-                    {{ form.email }}
-                    {{ form.email.errors }}
-                </div>
-                <div class="col-md-12">
-                    <label for="{{form.text.id_for.label}}">评论:</label>
-                    {{ form.text }}
-                    {{ form.text.errors }}
-                    <button type="submit" class="btn btn-primary">发表</button>
-                </div>
-            </div>
+                <button type="submit" class="btn btn-primary">发表</button>
         </form>
     </div>
 {% endblock content %}

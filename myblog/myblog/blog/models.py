@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.shortcuts import render
 from django.utils.html import strip_tags
-
+import markdown
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=20)
@@ -24,7 +24,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     body = models.TextField()
     created_time = models.DateTimeField()
-    modified_time = models.DateTimeField()
+    modified_time = models.DateTimeField(blank=True)
     excerpt=models.CharField(max_length=200, blank=True)
     view = models.PositiveIntegerField(default=0)
 
@@ -41,7 +41,11 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.excerpt:
-            self.excerpt = strip_tags(self.body)[:54]
+            md = markdown.Markdown(extensions = [
+                                         'markdown.extensions.extra',
+                                         'markdown.extensions.codehilite',
+                                     ])
+            self.excerpt = strip_tags(md.convert(self.body))[:54]
         super(Post, self).save(*args, **kwargs)
 
     class Meta:
