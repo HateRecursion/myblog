@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static%}
+{% load highlight %}
+
+{% block content %}
+<div class="col-md-8 blog-main">
+    {% if query %}
+        <div class="row">
+        {% for result in page.object_list %}
+            <div class="col-md-6 col-sm-6">
+                <article class=" blog-teaser">
+                    <header>
+                        <img class="img-responsive" src="{% static 'blog/img/1.jpg' %}" alt="picture">
+                        <h3><a href="{{ result.object.get_absolute_url }}">{% highlight result.object.title with query %}</a></h3>
+                        <span class="meta">{{ result.object.created_time }}, {{ result.object.author }}</span>
+                        <hr>
+                    </header>
+                    <div class="body">
+                        <p>{% highlight result.object.body with query %}</p>
+                    </div>
+                    <div class="clearfix">
+                        <a href="{{ result.object.get_absolute_url }}" class="btn btn-clean-one">继续阅读</a>
+                    </div>
+                </article>
+            </div>
+        {% endfor %}
+        </div>
+
+        {% if page.has_previous or page.has_next %}
+        <div class="paging" style="margin:0 auto;text-align:center">
+            {% if page.has_previous %}
+                <a href="?q={{query}}&amp;page={{page.previous_page_number}}">{% endif %}&laquo; Previous
+            {% if page.has_previous %}</a>{% endif %}
+            {% if page.has_next %}
+                <a href="?q={{query}}&amp;page={{page.next_page_number}}">{% endif %}Next&raquo;
+            {% if page.has_next %}</a>{% endif %}
+        </div>
+        {% endif %}
+    {% else %}
+        <P class="text-center">没有搜索到结果!</P>
+    {% endif %}
+
+</div>
+
+{% endblock %}

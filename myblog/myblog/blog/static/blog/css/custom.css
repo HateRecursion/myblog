@@ -1,0 +1,9 @@
+#myCarouse {
+    height: 50 px;
+}
+
+#myCarouse img{
+    width: 100%;
+    height: auto;
+}
+
