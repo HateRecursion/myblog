@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'm0c4na^wsc=nv1g$5fuk!kyew6e1+wfh*t=jxs_$v@h0ii3crn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '.flashmove.top', 'localhost']
 
@@ -84,6 +84,8 @@ DATABASES = {
 		'PASSWORD': 'tshjl123', 
 		'HOST': '127.0.0.1',  
 		'PORT': '3306', 
+ #       'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
