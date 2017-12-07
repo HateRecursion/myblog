@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home</title>
+    <title>有间小站</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
@@ -57,6 +57,7 @@
             </div>
             <div>
                 <ul class="nav navbar-nav">
+                    <li><a href="{% url 'blog:index' %}">主页</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             前端 <b class="caret"></b>
@@ -81,7 +82,6 @@
                             <li><a href="#">Python</a></li>
                         </ul>
                     </li>
-                    <li><a href="{% url 'blog:index' %}">主页</a></li>
                     <li><a href="{% url 'blog:about' %}">关于</a></li>
                     <li><a href="{% url 'blog:contact' %}">联系</a></li>
                 </ul>
@@ -90,9 +90,18 @@
                         <input type="search" class="form-control" placeholder="Search" name="q" required>
                     </div>
                     <button type="submit" class="btn btn-default">
-                        <i class="fa fa-search fa-lg" aria-hidden="true"></i> 搜索
+                        <i class="fa fa-search fa-lg" aria-hidden="true"></i>
                     </button>
                 </form>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                    <li><a href="#"><i class="fa fa-address-book fa-lg"></i>{{ user.username }}</a></li>
+                    <li><a href="{% url 'blog:logout' %}"><i class="fa fa-sign-out fa-lg"></i>注销</a></li>
+                    {% else %}
+                    <li><a href="{% url 'blog:login' %}"><i class="fa fa-sign-in fa-lg"></i>登录</a></li>
+                    <li><a href="{% url 'blog:register' %}"><i class="fa fa-eyedropper fa-lg"></i>注册</a></li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
@@ -104,6 +113,10 @@
                 {% block content %}
                 {% endblock content %}
                 <aside class="col-md-4 blog-aside">
+                    <div class="text-center">
+                        <a class="btn btn-warning btn-lg" href="{% url 'blog:add_article' %}"><i class="fa fa-plus-square"></i> 新增文章</a>
+                    </div>
+                    <br>
                     <div class="panel-group">
                         <div class="panel panel-info">
                             <div class="panel-heading">
@@ -233,6 +246,8 @@
     <script src="{% static 'blog/js/jquery.min.js' %}"></script>
     <script src="{% static 'blog/js/bootstrap.min.js' %} "></script>
     <script src="{% static 'blog/js/modernizr.js' %}"></script>
+    {% block js_file %}
+    {% endblock js_file %}
 
 </body>
 </html>

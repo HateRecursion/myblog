@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="col-md-8" id="login">
+        <h2>注册</h2>
+        {% if form.errors %}
+            <p>用户名或密码输入有误！请重新输入！</p>
+        {% endif %}
+        <form action="{% url 'blog:register' %}" method="post" accept-charset="utf-8" role="form">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+            </div>
+            <div class="form-group">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+            <button type="submit" class="btn btn-primary">提交</button>
+        </form>
+    </div>
+
+{% endblock content %}

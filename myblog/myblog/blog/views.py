@@ -1,9 +1,15 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from django.views.generic import ListView,DetailView
 from .models import Post,Category,Tag
 from comments.forms import CommentForm
+from .forms import UserForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 import markdown
+from datetime import datetime
+from django.http import JsonResponse
 # Create your views here.
+
 
 class IndexView(ListView):
     model = Post
@@ -70,6 +76,7 @@ class IndexView(ListView):
         }
         return data
 
+
 class AchiveView(ListView):
     model = Post
     template_name = 'blog/index.html'
@@ -109,7 +116,6 @@ class ArticleView(DetailView):
         return context
 
 
-
 class CategoryView(ListView):
     model = Post
     template_name = 'blog/index.html'
@@ -128,6 +134,89 @@ class TagView(ListView):
     def get_queryset(self):
         tag = get_object_or_404(Tag, pk=self.kwargs.get('pk'))
         return Post.objects.filter(tags=tag)
+
+
+@login_required
+def add_article(request):
+    error = ""
+    if request.method == 'POST':
+        try:
+            title = request.POST['title']
+            body = request.POST.get('body', None)
+            category_name = request.POST.get('category', None)
+            category = Category.objects.get(name = category_name)
+            user = request.user
+            post,value = Post.objects.get_or_create(title=title, body=body, category=category, author=user)
+            tag_names=request.POST.getlist('tags')
+            if tag_names is None:
+                raise Exception("未选择标签！")
+            for tag_name in tag_names:
+                tag = Tag.objects.get(name=tag_name)
+                post.tags.add(tag)
+            post.save()
+            return redirect(post)
+
+        except Exception as error_msg:
+            print(error_msg)
+            error = "输入有误，请重试！"
+            return render(request, 'blog/add_post.html', {'error': error, 'title': post.title, 'body': post.body})
+
+    return render(request, 'blog/add_post.html', {'error': error})
+
+
+@login_required(login_url='/accounts/login/')
+def edit_article(request,pk):
+    post = get_object_or_404(Post, pk=pk)
+    error = ""
+
+    if request.method == 'POST':
+        try:
+            title_name = request.POST.get('title', None)
+            body_name = request.POST.get('body', None)
+            category_name = request.POST.get('category', None)
+            tag_names = request.POST.getlist('tags', None)
+            if tag_names is None or body_name is None or category_name is None or tag_names is None:
+                raise Exception("有内容未填写！")
+            post.modified_time = datetime.now()
+            post.category = Category.objects.get(name=category_name)
+            post.title = title_name
+            post.body = body_name
+            for tag_name in tag_names:
+                tag = Tag.objects.get(name=tag_name)
+                post.tags.add(tag)
+            post.save()
+            return redirect(post)
+
+        except Exception as error_msg:
+            print(error_msg)
+            error = "输入有误，请重试！"
+            return JsonResponse({'title':post.title, 'body':post.body, 'error':error})
+
+    if request.ajax() and request.method == 'GET':
+        return JsonResponse({'title':post.title, 'body':post.body, 'error':error})
+
+    return render(request, 'blog/edit_post.html', {'error':error, 'post':post})
+
+
+@login_required(login_url='/accounts/login/')
+def delete_article(request,pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    return redirect('blog:index')
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            User.objects.create_user(username=username,email=email,password=password)
+            return render(request, 'blog/index.html')
+    else:
+        form = UserForm()
+        return render(request, 'registration/register.html', {'form':form})
 
 
 def contact(request):

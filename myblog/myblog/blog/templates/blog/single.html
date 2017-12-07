@@ -12,21 +12,26 @@
 {% block content %}
     <div class="col-md-8 blog-main">
         <article class="blog-post">
-        <header>
-            <div class="lead-image">
-                <img src="{% static 'blog/img/single-post.jpg' %}" alt="" class="img-responsive">
+            <header>
+                <div class="lead-image">
+                    <img src="{% static 'blog/img/single-post.jpg' %}" alt="" class="img-responsive">
+                </div>
+            </header>
+            <div class="body ContentCenter">
+                <h1>{{ post.title }}</h1>
+                <a id="edit_post" class="btn btn-default btn-sm" href="{% url 'blog:edit_article' pk=post.pk %}"><i class="fa fa-pencil fa-lg"></i>编辑</a>
+                <a class="btn btn-danger btn-sm" href="{% url 'blog:delete_article' pk=post.pk %}"><i class="fa fa-trash-o fa-lg"></i>删除</a>
+                <div class="meta">
+                    <i class="fa fa-user fa-lg"></i> {{ post.author }} {{ post.view }}阅读
+                    <i class="fa fa-comments fa-lg"></i><a href="#comments">{{ post.comment_set.count }} 评论</a>
+                    <br>
+                    <i class="fa fa-calendar fa-lg"></i>创建时间：{{ post.created_time }}
+                    {% if post.modified_time %}
+                    <i class="fa fa-calendar"></i>修改时间：{{ post.modified_time }}
+                    {% endif %}
+                </div>
+                <p >{{ post.body|safe }}</p>
             </div>
-        </header>
-        <div class="body">
-            <h1>{{ post.title }}</h1>
-            <div class="meta">
-                <i class="fa fa-user"></i> {{ post.author }} {{ post.view }}阅读
-                <i class="fa fa-comments"></i><a href="#comments">{{ post.comment_set.count }} 评论</a>
-                <br>
-                <i class="fa fa-calendar"></i>创建时间：{{ post.created_time }}<i class="fa fa-calendar"></i>修改时间：{{ post.modified_time }}
-            </div>
-            <p>{{ post.body|safe }}</p>
-        </div>
         </article>
 
         <div class="row">
@@ -46,13 +51,12 @@
 
         <hr>
 
-
-        <ul id="comments" class="">
+        <ul id="comments" class="ContentCenter">
             <h2><i class="fa fa-comments"></i> {{ post.comment_set.count }} Comments</h2>
             {% if comment_list %}
                 {% for comment in comment_list %}
                 <li class="">
-                    <span class="">{{ comment.name }}</span>
+                    <span class="">{{ comment.user.username }}</span>
                     <time class="">{{ comment.created_time }}</time>
                     <div class="">{{ comment.text }}</div>
                 </li>
@@ -68,17 +72,8 @@
 
         <form action="{% url 'comments:post_comment' post.pk %}" method="post" accept-charset="utf-8" role="form">
             {% csrf_token %}
+                {% if user.is_authenticated %}
                 <div class="row">
-                    <div class="col-md-4 form-group">
-                        <label for="{{form.name.id_for.label}}">名字:</label>
-                        {{ form.name }}
-                        {{ form.name.errors }}
-                    </div>
-                    <div class="col-md-4 form-group">
-                        <label for="{{form.email.id_for.label}}">邮箱:</label>
-                        {{ form.email }}
-                        {{ form.email.errors }}
-                    </div>
                     <div class="col-md-12 form-group">
                         <label for="{{form.text.id_for.label}}">评论:</label>
                         {{ form.text }}
@@ -86,6 +81,9 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">发表</button>
+                {% else %}
+                <h3 class="">请先登录！</h3>
+                {% endif %}
         </form>
     </div>
 {% endblock content %}

@@ -1,12 +1,13 @@
 from django.db import models
-
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 # Create your models here.
+
+
 class Comment(models.Model):
-    name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=200)
+    user = models.ForeignKey(User,default="")
     text = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
-
     post = models.ForeignKey('blog.Post')
 
     def __str__(self):

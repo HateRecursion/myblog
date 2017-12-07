@@ -1,14 +1,11 @@
 {% extends 'base.html' %}
 
-{% block subheader %}
-    <a href="#">Contact Me</a>
-{% endblock subheader %}
-
 {% block content %}
     <div class="col-md-8 clean-superblock" id="contact">
         <h2>联系</h2>
 
         <form action="#" method="get" accept-charset="utf-8" role="form">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="name">名字</label>
                 <input type="text" name="name" id="name" placeholder="your name" class="form-control input-lg">

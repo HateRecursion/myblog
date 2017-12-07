@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static%}
+{% load blog_tags %}
+
+{% block subheader %}
+<a href="#">新增文章</a>
+{% endblock subheader %}
+
+{% block content %}
+<div class="col-md-8 clean-superblock" id="contact">
+    <h2>新增文章</h2>
+    <div class=" " id="error">
+        <p>{{error}}</p>
+    </div>
+    <form action="{% url 'blog:add_article' %}" method="post" accept-charset="utf-8" role="form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">文章标题:</label>
+            <input type="text" name="title" id="title" placeholder="title" class="form-control input-lg">
+        </div>
+        <div class="form-group">
+            <label for="body">文章正文:</label>
+            <textarea rows="20" cols="20" name="body" id="body" placeholder="post" class="form-control input-lg"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="category">分类:</label>
+            <select name="category" id="category">
+                {% get_categories as categories %}
+                {% for category in categories %}
+                <option value="{{category.name}}">{{category.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="tags">标签:</label>
+            {% get_tags as tags %}
+            {% for tag in tags %}
+            <input type="checkbox" name="tags" id="tags" value="{{ tag.name }}">{{ tag.name }}
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">提交</button>
+    </form>
+</div>
+{% endblock content %}
+
+{% block js_file %}
+<script src="{% static 'blog/js/custom.js' %}"></script>
+{% endblock js_file %}
